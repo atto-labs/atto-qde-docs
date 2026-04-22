@@ -418,13 +418,6 @@ Atto implements QDE. The engine and the framework are tightly coupled by design,
 
 ## Roadmap
 
-### Systems
-
-- Financial markets
-- Autonomous agents
-- Portfolio optimisation
-- Energy systems
-
 ### Human Decision Intelligence
 
 - Interview & hiring decision modelling
@@ -434,6 +427,13 @@ Atto implements QDE. The engine and the framework are tightly coupled by design,
 - Cognitive bias and inconsistency detection
 - Leadership and judgement evaluation
 - Human–AI interaction modelling
+
+### Systems
+
+- Financial markets
+- Autonomous agents
+- Portfolio optimisation
+- Energy systems
 
 ### Closed-loop Automated Learning System
 
