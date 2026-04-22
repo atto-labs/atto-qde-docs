@@ -92,22 +92,6 @@ Traditional ML maps inputs to outputs. Tree-of-thought explores discrete branche
 
 ---
 
-## Example: Energy / Resource Allocation
-
-Consider the question:
-
-> Given current system state, forecast signals, constraints, and confidence levels, what action should be taken next?
-
-In QDE terms:
-
-- **Superposition** — multiple allocation strategies coexist within the belief state, each weighted by how well it aligns with current signals.
-- **Interference** — forecast signals, constraints, and confidence levels interact. A strong forecast combined with a tight constraint amplifies conservative strategies. Relaxed constraints under high confidence amplify aggressive ones.
-- **Collapse** — when a decision is required, the belief state resolves into a specific allocation. The reasoning path is preserved.
-
-This pattern generalises across any domain where decisions involve competing strategies under structured uncertainty.
-
----
-
 ## Developer Quick Start
 
 There are two entry points depending on the level of control you need.
@@ -434,10 +418,28 @@ Atto implements QDE. The engine and the framework are tightly coupled by design,
 
 ## Roadmap
 
-- Energy systems
+### Systems
+
 - Financial markets
 - Autonomous agents
 - Portfolio optimisation
+- Energy systems
+
+### Human Decision Intelligence
+
+- Interview & hiring decision modelling
+- Problem solving and creative reasoning analysis
+- Behavioural and personality state modelling
+- Decision-making under uncertainty
+- Cognitive bias and inconsistency detection
+- Leadership and judgement evaluation
+- Human–AI interaction modelling
+
+### Closed-loop Automated Learning System
+
+- Continuous scenario learning
+- Adaptive model registry
+- Autonomous scenario expansion
 
 ---
 
