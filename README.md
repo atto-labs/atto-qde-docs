@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/docs-logo.png" alt="Atto — Quantum Decision Engine" width="600">
+</p>
+
 # Quantum Decision Engine (QDE)
 
 ### How beliefs evolve into decisions under uncertainty
