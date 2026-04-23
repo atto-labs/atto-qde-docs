@@ -354,12 +354,97 @@ print(registry.list_scenarios())  # ["my_scenario"]
 
 ---
 
+## Visualization
+
+Atto ships a `viz` module that renders the QDE decision process as 3D wave interference surfaces. Each strategy acts as a wave source — their complex amplitudes create an interference pattern that reshapes as signals arrive and the belief state evolves.
+
+### PipelineVisualizer
+
+**PipelineVisualizer** — wraps a `ScenarioAdapter` and renders the full pipeline (initial belief state, signal operators, constraints, collapse) as 3D interference surfaces.
+
+```python
+import numpy as np
+from atto.viz import PipelineVisualizer
+
+viz = PipelineVisualizer(
+    adapter,
+    signal_names=["Signal A", "Signal B", "Signal C"],
+)
+
+context = np.array([0.85, 0.15, 0.70, 0.90])
+```
+
+### Static Pipeline Trajectory
+
+One panel per stage — initial belief, after each signal operator, after constraints, and collapse:
+
+```python
+fig = viz.plot_static(context)
+```
+
+### Animated Pipeline
+
+3D animation of the interference surface evolving through each stage, with a probability bar chart tracking strategy distributions:
+
+```python
+# In a script or interactive window
+viz.show(context)
+
+# In a Jupyter notebook
+from IPython.display import HTML
+anim = viz.animate(context)
+HTML(anim.to_jshtml())
+```
+
+### Single Belief State
+
+Plot the interference pattern of any `AttoState`:
+
+```python
+from atto.core.state import AttoState
+from atto.viz import plot_interference
+
+state = AttoState.uniform(3, labels=["strategy_a", "strategy_b", "strategy_c"])
+plot_interference(state, title="Uniform superposition")
+```
+
+### Pipeline Introspection
+
+Access intermediate states for custom analysis or visualization:
+
+```python
+states, stage_names, decision = viz.run_pipeline(context)
+
+for name, state in zip(stage_names, states):
+    print(f"{name}: P = {state.probabilities}")
+print(f"Decision: {decision.label} (confidence={decision.confidence:.3f})")
+```
+
+| Function / Class                   | Purpose                                                 |
+| ---------------------------------- | ------------------------------------------------------- |
+| `PipelineVisualizer(adapter)`      | One-call wrapper — runs pipeline and visualizes         |
+| `.animate(context)`                | Returns `FuncAnimation` (3D surface + probability bars) |
+| `.show(context)`                   | Animate + `plt.show()`                                  |
+| `.plot_static(context)`            | Multi-panel static figure                               |
+| `.run_pipeline(context)`           | Returns `(states, stage_names, decision)`               |
+| `plot_interference(state)`         | Single state → 3D surface                               |
+| `plot_trajectory(states)`          | Sequence of states → side-by-side panels                |
+| `compute_interference(amplitudes)` | Raw numpy computation → `(X, Y, Z)`                     |
+
+---
+
 ## Installation
 
 The core engine is distributed as a private package. Requires Python 3.10+ with NumPy and Pydantic.
 
 ```bash
 pip install git+https://github.com/atto-labs/atto-qde.git
+```
+
+With visualization support:
+
+```bash
+pip install "atto-qde[viz] @ git+https://github.com/atto-labs/atto-qde.git"
 ```
 
 Private access required. Contact the maintainers to request access.
