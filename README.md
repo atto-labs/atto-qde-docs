@@ -62,6 +62,10 @@ Measurement (collapse)
 Decision
 ```
 
+<p align="center">
+  <img src="assets/creative_problem_solving_pipeline.gif" alt="QDE pipeline animation — belief state evolution through interference" width="800">
+</p>
+
 ---
 
 ## Intuition
@@ -89,6 +93,34 @@ Traditional ML maps inputs to outputs. Tree-of-thought explores discrete branche
 - **Natural handling of ambiguity** — uncertainty is represented structurally, not approximated as a confidence score.
 - **Interpretable decision formation** — the path from signals to decision is traceable through the evolution of the belief state.
 - **Complex reasoning without deep neural networks** — structured decision-making emerges from the mathematical framework itself, not from large parameter counts.
+
+---
+
+## Where QDE Fits
+
+QDE is a **cognition engine** — it models how decisions form, not how patterns are detected.
+
+It is not a replacement for neural networks, regression models, or any other predictive system. It is a **complementary layer** that sits downstream of those systems and reasons over their outputs.
+
+A neural network can tell you that a signal is present. A regression model can estimate a relationship. QDE takes those outputs — scores, probabilities, features — and treats them as **context signals** that feed into a structured reasoning process. It models how those signals interact, compete, and resolve into a decision.
+
+```text
+Data sources (ML, regression, rules, human input)
+      ↓
+Context signals into QDE
+      ↓
+Belief state evolution (interference, order effects)
+      ↓
+Decision
+```
+
+This makes QDE one piece of a larger decision system, not the whole system. It is designed to be composed with existing tools:
+
+- **Upstream**: any model or data source that produces scores, classifications, or features.
+- **QDE**: interprets those signals as competing beliefs and evolves them into a decision through structured reasoning.
+- **Downstream**: the decision feeds into actions, policies, or further analysis.
+
+The value is in what happens between signal intake and decision output — the reasoning process itself. That is the layer most systems skip.
 
 ---
 
