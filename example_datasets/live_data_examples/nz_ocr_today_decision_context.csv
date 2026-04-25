@@ -1,0 +1,2 @@
+asof_date,decision_date,latest_ocr_pct,bank_bill_90d_pct,govt_10y_yield_pct,market_policy_bias_bps,cpi_yoy_pct,inflation_gap_pct,unemployment_rate_pct,unemployment_gap_pct,real_gdp_qoq_pct,yield_curve_slope_pct,actual_ocr_after_decision_pct,actual_decision,cut_score,hold_score,hike_score,suggested_action,suggested_policy_bias
+2026-04-24,2026-04-24,2.25,2.59,4.72,33.999999999999986,5.64924114671165,3.64924114671165,5.701879,1.201879,0.0704361516999263,2.13,,,0.661,0.0,2.0292,hike,hike
