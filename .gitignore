@@ -1,3 +1,4 @@
 _misc/
 .venv
 .gihub
+examples/console-integration/
