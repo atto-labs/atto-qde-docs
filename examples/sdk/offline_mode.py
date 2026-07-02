@@ -1,10 +1,10 @@
 """Offline-mode example: NoOp validator + emitter, no network.
 
-Useful for OSS users, local development, CI, and air-gapped
-deployments. The SDK behaves identically to hosted mode from the
-caller's perspective; the validator always returns valid and the
-emitter discards events (but retains them in ``emitter.events`` for
-inspection).
+Useful for local development, CI, and air-gapped deployments. The SDK
+runs without network access but enforces a 100-decision-per-month cap
+inside the compiled binary. The validator returns a local free-tier
+token and the emitter discards events (but retains them in
+``emitter.events`` for inspection).
 
 Run::
 

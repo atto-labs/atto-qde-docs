@@ -17,20 +17,23 @@ AttoEngine(
     emitter: UsageEmitter | None = None,
     org_id: str = "",
     scenario: str = "",
-    auto_wire_runtime: bool = True,
 )
 ```
 
-| Parameter            | Purpose                                                                                                              |
-| -------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `dimension`          | Number of candidate strategies in the decision space.                                                                |
-| `labels`             | Optional list of human-readable strategy names; length must equal `dimension`.                                       |
-| `measurement_method` | `"argmax"` (default) selects the highest-amplitude strategy. Other strategies plug into `AttoMeasurement`.           |
-| `validator`          | Override the licence validator. Defaults to the env-driven choice from `build_default_runtime`.                      |
-| `emitter`            | Override the usage emitter. Defaults likewise.                                                                       |
-| `org_id`             | Org ID forwarded to the validator and emitter. Falls back to the runtime default.                                    |
-| `scenario`           | Free-form scenario tag attached to every emitted `UsageEvent`.                                                       |
-| `auto_wire_runtime`  | Set to `False` to disable licence/usage wiring entirely (bare engine, no env-reads). The engine then runs unmetered. |
+> **Runtime wiring is always active.** The engine automatically configures
+> licence validation and usage reporting from environment variables
+> (`ATTO_API_KEY`, `ATTO_ORG_ID`, `ATTO_CONSOLE_BASE_URL`). This cannot
+> be disabled in production builds.
+
+| Parameter            | Purpose                                                                                                    |
+| -------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `dimension`          | Number of candidate strategies in the decision space.                                                      |
+| `labels`             | Optional list of human-readable strategy names; length must equal `dimension`.                             |
+| `measurement_method` | `"argmax"` (default) selects the highest-amplitude strategy. Other strategies plug into `AttoMeasurement`. |
+| `validator`          | Override the licence validator. Defaults to the env-driven choice from `build_default_runtime`.            |
+| `emitter`            | Override the usage emitter. Defaults likewise.                                                             |
+| `org_id`             | Org ID forwarded to the validator and emitter. Falls back to the runtime default.                          |
+| `scenario`           | Free-form scenario tag attached to every emitted `UsageEvent`.                                             |
 
 ## Methods
 

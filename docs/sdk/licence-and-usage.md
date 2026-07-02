@@ -8,11 +8,12 @@ unavailable.
 
 Before each decision, `LicenceValidator.check(org_id)` is invoked.
 
-- `NoOpLicenceValidator` (offline mode) always returns `state=valid`
-  with no network call.
+- `NoOpLicenceValidator` (offline mode) returns a local free-tier token
+  that allows up to 100 decisions per month. The cap is enforced inside
+  the compiled binary via a signed monotonic counter.
 - `ConsoleLicenceValidator` (hosted mode) calls
-  `GET /api/v1/licence/{org_id}?product=core`. The response is cached
-  in-process for ~30 seconds to avoid one round-trip per decision.
+  `POST /api/v1/licence/{org_id}/token`. The response is a signed JWT
+  (Ed25519) cached in-process for 24 hours.
 
 The response carries the current state and live counters, mapped onto
 `LicenceStatus.metadata`:
@@ -62,17 +63,19 @@ for assertions in tests.
 
 ## Failure modes
 
-| Condition                                    | What the SDK does                               |
-| -------------------------------------------- | ----------------------------------------------- |
-| Network timeout / 5xx on licence check       | Raises `LicenceError` (transport).              |
-| 401 / 403 from console                       | Raises `InvalidApiKey`.                         |
-| `upgrade_required=true`                      | Raises `PlanUpgradeRequired(checkout_url=...)`. |
-| `state=suspended` or balance zero            | Raises `QuotaExhausted`.                        |
-| Network failure on usage POST                | Logs `WARNING`, drops the batch. No raise.      |
-| `httpx` not installed (no `[console]` extra) | Falls back to NoOp pair at runtime.             |
+| Condition                                    | What the SDK does                                                                          |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Network timeout / 5xx on token fetch         | Uses cached token if within grace period (72 h default); raises `LicenceError` if expired. |
+| 401 / 403 from console                       | Raises `InvalidApiKey`.                                                                    |
+| `upgrade_required=true`                      | Raises `PlanUpgradeRequired(checkout_url=...)`.                                            |
+| `state=suspended` or balance zero            | Raises `QuotaExhausted`.                                                                   |
+| Local decision counter reaches cap           | Raises `PlanUpgradeRequired` (enforced in compiled binary).                                |
+| Network failure on usage POST                | Logs `WARNING`, drops the batch. No raise.                                                 |
+| `httpx` not installed (no `[console]` extra) | Falls back to NoOp pair at runtime (100-decision cap).                                     |
 
-The licence check is **fail-closed** — a transport failure aborts the
-decision rather than letting it through unmetered. If your application
+The licence check is **fail-closed** — once both the cached token has
+expired and the grace period has elapsed, the SDK raises `LicenceError`
+rather than letting decisions through unmetered. If your application
 needs fail-open semantics, wrap `engine.decide()` in your own
 `try/except LicenceError` and fall back to a default action.
 
@@ -93,3 +96,8 @@ engine = AttoEngine(
 
 Or simply unset `ATTO_API_KEY` / `ATTO_ORG_ID` — the default runtime
 factory selects the no-op pair when either is missing.
+
+> **Note:** Offline mode still enforces a 100-decision-per-month cap
+> inside the compiled binary. This cap is tracked by a signed monotonic
+> counter. To run unlimited decisions you must be on the `core_metered`
+> plan with a valid hosted-mode token.

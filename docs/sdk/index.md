@@ -4,10 +4,10 @@ The `atto-qde` Python SDK ships the Quantum Decision Engine as an installable
 library. Customers run it in their own process: there is no hosted API to
 call into. The SDK has two operating modes:
 
-| Mode        | What it does                                                                 | When to use                            |
-| ----------- | ---------------------------------------------------------------------------- | -------------------------------------- |
-| **Offline** | No network calls. `NoOpLicenceValidator` always returns valid; no metering.  | OSS users, local development, CI.      |
-| **Hosted**  | Pre-flight licence check against `console.atto-qde.com`; usage events POSTed | Commercial use under the Core product. |
+| Mode        | What it does                                                                                           | When to use                            |
+| ----------- | ------------------------------------------------------------------------------------------------------ | -------------------------------------- |
+| **Offline** | No network calls. Local free-tier token allows up to 100 decisions/month, enforced in compiled binary. | Local development, CI.                 |
+| **Hosted**  | Signed licence token fetched from `console.atto-qde.com`; usage events POSTed.                         | Commercial use under the Core product. |
 
 Selection is purely environmental — set `ATTO_API_KEY` and `ATTO_ORG_ID`
 to opt into hosted mode; leave them unset for offline mode.

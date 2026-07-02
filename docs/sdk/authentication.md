@@ -14,12 +14,32 @@ calls by default).
 | `ATTO_CONSOLE_BASE_URL` | No                       | `https://console.atto-qde.com` | Override for staging or self-hosted console deployments.     |
 | `ATTO_API_BASE`         | No                       | (mirrored from base URL)       | Lower-level override read by the HTTP client. Rarely needed. |
 
-If either `ATTO_API_KEY` or `ATTO_ORG_ID` is missing, the SDK silently
-falls back to **offline mode** and logs once at `INFO`:
+If either `ATTO_API_KEY` or `ATTO_ORG_ID` is missing, the SDK falls back to
+**offline mode** and logs once at `INFO`:
 
 ```
-atto-qde running offline; no licence or usage emission
+atto-qde running offline (free-tier cap: 100 decisions/month)
 ```
+
+In offline mode, a local free-tier token is used. The compiled binary
+enforces a 100-decision-per-month cap locally. Once the cap is reached the
+SDK raises `PlanUpgradeRequired` and requires a console round-trip to
+continue.
+
+## Signed licence tokens
+
+In hosted mode, the console issues a **signed JWT** (Ed25519) when the SDK
+calls `POST /api/v1/licence/{org_id}/token`. The token:
+
+- Is cached in-process for 24 hours (the token's TTL).
+- Contains the org ID, product scope, decision cap, and expiry.
+- Is verified offline against a public key embedded in the compiled binary.
+- Enables a configurable **grace period** (default 72 h) during which the
+  SDK continues to operate if the console is unreachable, as long as the
+  cached token has not expired.
+
+After the grace period elapses without a successful token refresh, the SDK
+raises `LicenceError`.
 
 ## Issuing a key
 

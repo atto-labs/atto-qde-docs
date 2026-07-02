@@ -29,9 +29,10 @@ These operations are **free** and do not count toward your allowance:
 
 ## Free → Metered upgrade
 
-`core_free` includes 100 decisions per calendar month (UTC). When the
-101st decision is requested, the licence endpoint returns
-`upgrade_required=true` and the SDK raises:
+`core_free` includes 100 decisions per calendar month (UTC). The cap is
+enforced both server-side (via the licence endpoint) and locally inside
+the compiled SDK binary via a signed monotonic counter. When the 101st
+decision is requested, the SDK raises:
 
 ```python
 from atto.licence.errors import PlanUpgradeRequired

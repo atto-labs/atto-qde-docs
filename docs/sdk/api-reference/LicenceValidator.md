@@ -45,16 +45,19 @@ A frozen Pydantic model describing the outcome of one check.
 
 ### `NoOpLicenceValidator`
 
-Always returns `state=valid`. No network. Used in offline mode and in
-tests.
+Returns a local free-tier token (`state=valid`) with no network call.
+The compiled binary still enforces a 100-decision-per-month cap via a
+signed monotonic counter. Used in offline mode and in tests.
 
 ### `ConsoleLicenceValidator`
 
-Calls `GET /api/v1/licence/{org}?product=core` against
-`ATTO_CONSOLE_BASE_URL`. Caches successful responses in-process for ~30
-seconds. Construct directly only when you need to override the HTTP
-client; `build_default_runtime()` produces a properly configured
-instance from environment variables.
+Calls `POST /api/v1/licence/{org}/token` against
+`ATTO_CONSOLE_BASE_URL`. The response is a signed JWT (Ed25519) cached
+in-process for 24 hours. If the console is unreachable, the cached
+token remains valid for a configurable grace period (default 72 h).
+Construct directly only when you need to override the HTTP client;
+`build_default_runtime()` produces a properly configured instance from
+environment variables.
 
 ```python
 from atto.licence.console_validator import ConsoleLicenceValidator
